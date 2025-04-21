@@ -4,6 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Link } from "react-router-dom";
+import { sendUserLoginData, UserLoginData } from "@/service/BackendService";
+import toast from "react-hot-toast";
 
 export default function LoginPage() {
   const [mode, setMode] = useState("Developer");
@@ -17,15 +20,22 @@ export default function LoginPage() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const payload = {
-      identifier: formData.identifier,
+    const payload: UserLoginData = {
+      username: formData.identifier,
       password: formData.password,
-      remember: formData.remember,
-      mode,
     };
-    console.log("Logging in with:", payload);
+
+    const response = await sendUserLoginData(payload);
+
+    if(response){
+      formData.remember && localStorage.setItem("token", response.access_token);
+      toast.success("Logged In Succesfully.")
+    }
+    else{
+      toast.error("Unable to Login.")
+    }
   };
 
   return (
@@ -126,10 +136,10 @@ export default function LoginPage() {
               </Button>
 
               <p className="text-center text-sm">
-                Don't have an account?{" "}
-                <a href="#" className="text-blue-400 hover:underline">
+                Don't have an Account? {" "}
+                <Link to="/registration" className="text-blue-400 hover:underline">
                   Sign Up
-                </a>
+                </Link>
               </p>
             </form>
           </div>

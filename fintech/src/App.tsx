@@ -1,7 +1,13 @@
-import LoginPage from "@/routes/AuthenticationPages/LoginPage";
+import React from "react";
+import { Toaster } from "react-hot-toast";
+import { Outlet } from "react-router"
 
 function App() {
-  return <LoginPage />;
+  return<>
+  <Outlet />;
+  <Toaster position="top-right" />
+  
+  </>
 }
 
 export default App;

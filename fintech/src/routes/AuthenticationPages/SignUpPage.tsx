@@ -1,20 +1,20 @@
 import React, { useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
+import {
+  UserRegistrationData,
+  sendUserRegistrationData,
+} from "@/service/BackendService";
+import { Link, useNavigate } from "react-router-dom";
 
-interface FormData {
-  username: string;
-  email: string;
-  password: string;
-}
-
-export default function SignupForm() {
-  const [formData, setFormData] = useState<FormData>({
+export default function SignUpPage() {
+  const [formData, setFormData] = useState<UserRegistrationData>({
     username: "",
     email: "",
     password: "",
   });
 
-  const [errors, setErrors] = useState<Partial<FormData>>({});
+  const [errors, setErrors] = useState<Partial<UserRegistrationData>>({});
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -29,10 +29,10 @@ export default function SignupForm() {
   };
 
   const validate = () => {
-    const newErrors: Partial<FormData> = {};
+    const newErrors: Partial<UserRegistrationData> = {};
 
-    if (!formData.username || formData.username.length < 3) {
-      newErrors.username = "Username must be at least 3 characters.";
+    if (!formData.username || formData.username.length < 6) {
+      newErrors.username = "Username must be at least 6 characters.";
     }
 
     if (!formData.email || !/\S+@\S+\.\S+/.test(formData.email)) {
@@ -47,14 +47,21 @@ export default function SignupForm() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (validate()) {
-      toast.success("Account created successfully 🎉");
+      const response = await sendUserRegistrationData(formData);
+      toast.success("Account Created Successfully 🎉");
+      setTimeout(() => {
+        toast.success("Now You can Sign in");
+      }, 2000);
       setFormData({ username: "", email: "", password: "" });
+      setTimeout(() => {
+        navigate("/");
+      }, 5000);
     } else {
-      toast.error("Please fix the errors in the form.");
+      toast.error("Invalid Values entered in the Form");
     }
   };
 
@@ -62,20 +69,21 @@ export default function SignupForm() {
     <>
       <Toaster position="top-center" />
       <div className="min-h-screen flex items-center justify-center bg-slate-900 px-4 sm:px-6 lg:px-8">
-      <div className="backdrop-blur-md bg-white/5 border border-white/10 text-white rounded-2xl p-6 sm:p-8 w-full max-w-[95%] sm:max-w-[420px] md:max-w-[480px] shadow-2xl">
-
-      <h2 className="text-2xl sm:text-3xl font-bold mb-2 text-center text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">
-  Developer Registration
-</h2>
+        <div className="backdrop-blur-md bg-white/5 border border-white/10 text-white rounded-2xl p-6 sm:p-8 w-full max-w-[95%] sm:max-w-[420px] md:max-w-[480px] shadow-2xl">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-2 text-center text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">
+            Developer Registration
+          </h2>
 
           <p className="text-xs sm:text-sm text-white/60 text-center mb-6">
             Complete the form below to register a new account.
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            
             <div>
-              <label className="block text-xs sm:text-sm mb-1" htmlFor="username">
+              <label
+                className="block text-xs sm:text-sm mb-1"
+                htmlFor="username"
+              >
                 Username
               </label>
               <input
@@ -94,7 +102,6 @@ export default function SignupForm() {
               )}
             </div>
 
-           
             <div>
               <label className="block text-xs sm:text-sm mb-1" htmlFor="email">
                 Email
@@ -115,9 +122,11 @@ export default function SignupForm() {
               )}
             </div>
 
-          
             <div>
-              <label className="block text-xs sm:text-sm mb-1" htmlFor="password">
+              <label
+                className="block text-xs sm:text-sm mb-1"
+                htmlFor="password"
+              >
                 Password
               </label>
               <input
@@ -136,13 +145,22 @@ export default function SignupForm() {
               )}
             </div>
 
-          
             <button
               type="submit"
               className="w-full bg-gradient-to-r from-white to-white/80 text-slate-900 hover:from-gray-100 hover:to-white py-2 rounded-md font-semibold text-sm sm:text-base transition-all duration-300 relative overflow-hidden"
             >
               Sign Up
             </button>
+
+            <p className="text-center text-sm">
+              Already a User?{" "}
+              <Link
+                to="/registration"
+                className="text-blue-400 hover:underline"
+              >
+                Sign In
+              </Link>
+            </p>
           </form>
         </div>
       </div>
