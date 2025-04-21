@@ -1,6 +1,10 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @custom-variant dark (&:is(.dark *));
 
 :root {
@@ -9,6 +13,8 @@
   --secondary-color: #6366f1;
   --background-color: #f9fafb;
   --text-color: #111827;
+  --dark: #323232;
+  --light: #FFFFFF;
 
   /* Font */
   --font-family: "Segoe UI", Tahoma, Verdana, sans-serif;
