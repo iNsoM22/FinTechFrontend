@@ -1,7 +1,7 @@
-import LoginForm from "@/pages/login";
+import LoginPage from "@/routes/AuthenticationPages/LoginPage";
 
 function App() {
-  return <LoginForm />;
+  return <LoginPage />;
 }
 
 export default App;

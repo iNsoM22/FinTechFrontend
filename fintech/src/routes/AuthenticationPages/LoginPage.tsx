@@ -5,8 +5,8 @@ import { Label } from "@/components/ui/label";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Checkbox } from "@/components/ui/checkbox";
 
-export default function LoginForm() {
-  const [mode, setMode] = useState("developer");
+export default function LoginPage() {
+  const [mode, setMode] = useState("Developer");
   const [formData, setFormData] = useState({
     identifier: "",
     password: "",
@@ -50,17 +50,17 @@ export default function LoginForm() {
               className="flex w-full justify-center gap-2"
             >
               <ToggleGroupItem
-                value="developer"
+                value="Developer"
                 className={`px-4 py-2 rounded-md border border-gray-600 transition-all duration-300 hover:bg-[#444] cursor-pointer ${
-                  mode === "developer" ? "bg-[#444]" : ""
+                  mode === "Developer" ? "bg-[#444]" : ""
                 }`}
               >
                 Developer
               </ToggleGroupItem>
               <ToggleGroupItem
-                value="admin"
+                value="Admin"
                 className={`px-4 py-2 rounded-md border border-gray-600 transition-all duration-300 hover:bg-[#444] cursor-pointer ${
-                  mode === "admin" ? "bg-[#444]" : ""
+                  mode === "Admin" ? "bg-[#444]" : ""
                 }`}
               >
                 Admin
