@@ -1,4 +1,5 @@
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const server: string = import.meta.env.VITE_SERVER_URL + "/api";
 
@@ -16,13 +17,14 @@ export const sendUserRegistrationData = async (
     const response = await axios.post(`${server}/auth/register`, userData);
     return response.data;
   } catch (error: any) {
-    throw new Error(error.response?.data?.detail || "Registration Failed");
+    toast.error(error.response?.data?.detail || "Registration Failed");
   }
 };
 
 export interface UserLoginData {
   username: string;
   password: string;
+  mode: string;
 }
 
 // Login User
@@ -32,7 +34,7 @@ export const sendUserLoginData = async (loginData: UserLoginData) => {
     formData.append("username", loginData.username);
     formData.append("password", loginData.password);
 
-    const response = await axios.post(`${server}/auth/login`, formData, {
+    const response = await axios.post(`${server}/auth/login?mode=${loginData.mode}`, formData, {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
@@ -40,7 +42,33 @@ export const sendUserLoginData = async (loginData: UserLoginData) => {
 
     return response.data;
   } catch (error: any) {
-    console.log(Error(error.response?.data?.detail || "Login Failed"))
+    toast.error( error.response?.data?.detail || "Login Failed")
+    return null;
+  }
+};
+
+
+// Token Validation
+export const validateTokenUser = async () => {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    toast.error("No Token Found. Please log in Again.");
+    return null;
+  }
+
+  try {
+    const response = await axios.get(`${server}/auth/me`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+
+  } catch (error) {
+    toast.error("Session Expired or Invalid Token. Please log in Again.");
+
+    localStorage.removeItem("token");
     return null;
   }
 };
