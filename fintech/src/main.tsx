@@ -4,6 +4,7 @@ import './index.css'
 import App from './App.tsx'
 import {RegistrationPage, SignInPage, PricingPage, DashboardPage} from "./routes/pages.tsx"
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import ProtectedRoute from './components/ProtectedRoute.tsx'
 
 const router = createBrowserRouter([
   {
@@ -23,7 +24,9 @@ const router = createBrowserRouter([
       },
       {
         path: "/dashboard",
-        element: DashboardPage
+        element: <ProtectedRoute>
+          {DashboardPage}
+        </ProtectedRoute>,
       }
     ],
   },

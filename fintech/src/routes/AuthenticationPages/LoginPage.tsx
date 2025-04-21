@@ -25,6 +25,7 @@ export default function LoginPage() {
     const payload: UserLoginData = {
       username: formData.identifier,
       password: formData.password,
+      mode: mode
     };
 
     const response = await sendUserLoginData(payload);
