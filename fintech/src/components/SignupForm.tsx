@@ -62,10 +62,12 @@ export default function SignupForm() {
     <>
       <Toaster position="top-center" />
       <div className="min-h-screen flex items-center justify-center bg-slate-900 px-4 sm:px-6 lg:px-8">
-        <div className="bg-slate-800 text-white rounded-2xl p-6 sm:p-8 w-full max-w-[95%] sm:max-w-[420px] md:max-w-[480px] shadow-2xl">
-          <h2 className="text-2xl sm:text-3xl font-bold mb-2 text-center">
-            Developer Registration
-          </h2>
+      <div className="backdrop-blur-md bg-white/5 border border-white/10 text-white rounded-2xl p-6 sm:p-8 w-full max-w-[95%] sm:max-w-[420px] md:max-w-[480px] shadow-2xl">
+
+      <h2 className="text-2xl sm:text-3xl font-bold mb-2 text-center text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">
+  Developer Registration
+</h2>
+
           <p className="text-xs sm:text-sm text-white/60 text-center mb-6">
             Complete the form below to register a new account.
           </p>
@@ -137,7 +139,7 @@ export default function SignupForm() {
           
             <button
               type="submit"
-              className="w-full bg-white text-slate-900 hover:bg-gray-100 py-2 rounded-md font-semibold text-sm sm:text-base transition duration-200 btn-hover"
+              className="w-full bg-gradient-to-r from-white to-white/80 text-slate-900 hover:from-gray-100 hover:to-white py-2 rounded-md font-semibold text-sm sm:text-base transition-all duration-300 relative overflow-hidden"
             >
               Sign Up
             </button>
