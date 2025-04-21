@@ -149,3 +149,9 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+.btn-hover:hover {
+  transform: translateY(-3px);
+  background-color: #4A90E2;  
+  transition: all 0.3s ease-in-out;
+}
