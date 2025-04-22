@@ -1,10 +1,17 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
-import {RegistrationPage, SignInPage, PricingPage, DashboardPage} from "./routes/pages.tsx"
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import "./index.css";
+import App from "./App.tsx";
+import {
+  RegistrationPage,
+  SignInPage,
+  PricingPage,
+  DashboardPage,
+  PaymentSuccessPage,
+  PaymentCancelPage,
+} from "./routes/pages.tsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-// import ProtectedRoute from './components/ProtectedRoute.tsx'
+import ProtectedRoute from "./components/ProtectedRoute.tsx";
 
 const router = createBrowserRouter([
   {
@@ -20,18 +27,26 @@ const router = createBrowserRouter([
       },
       {
         path: "/pricing",
-        element: PricingPage
+        element: PricingPage,
       },
       {
         path: "/dashboard",
-        element: DashboardPage // add the protected route back
-      }
+        element: <ProtectedRoute>{DashboardPage}</ProtectedRoute>,
+      },
+      {
+        path: "/success",
+        element: <ProtectedRoute>{PaymentSuccessPage}</ProtectedRoute>,
+      },
+      {
+        path: "/cancel",
+        element: <ProtectedRoute>{PaymentCancelPage}</ProtectedRoute>,
+      },
     ],
   },
 ]);
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-      <RouterProvider router={router} />
+    <RouterProvider router={router} />
   </StrictMode>
 );

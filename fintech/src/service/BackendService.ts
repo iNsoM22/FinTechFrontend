@@ -34,19 +34,22 @@ export const sendUserLoginData = async (loginData: UserLoginData) => {
     formData.append("username", loginData.username);
     formData.append("password", loginData.password);
 
-    const response = await axios.post(`${server}/auth/login?mode=${loginData.mode}`, formData, {
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-    });
+    const response = await axios.post(
+      `${server}/auth/login?mode=${loginData.mode}`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      }
+    );
 
     return response.data;
   } catch (error: any) {
-    toast.error( error.response?.data?.detail || "Login Failed")
+    toast.error(error.response?.data?.detail || "Login Failed");
     return null;
   }
 };
-
 
 // Token Validation
 export const validateTokenUser = async () => {
@@ -64,11 +67,70 @@ export const validateTokenUser = async () => {
       },
     });
     return response.data;
-
   } catch (error) {
     toast.error("Session Expired or Invalid Token. Please log in Again.");
 
     localStorage.removeItem("token");
+    return null;
+  }
+};
+
+export interface StripePrice {
+  id: string;
+  unit_amount: number;
+  currency: string;
+  recurring: {
+    interval: string;
+    interval_count: number;
+  };
+}
+
+export interface StripeProduct {
+  id: string;
+  name: string;
+  description: string;
+  prices: StripePrice[];
+}
+
+export const getStripeProducts = async (): Promise<StripeProduct[] | null> => {
+  try {
+    const response = await axios.get<StripeProduct[]>(
+      `${server}/plan/products`
+    );
+    return response.data;
+  } catch (error) {
+    toast.error("Failed to Fetch Plans");
+    return null;
+  }
+};
+
+// Create Stripe Checkout Session
+export const createCheckoutSession = async (
+  priceId: string
+): Promise<string | null> => {
+  try {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      toast.error("No Token Found. Please log in Again.");
+      return null;
+    }
+
+    const response = await axios.post(
+      `${server}/payment/create-checkout-session`,
+      { price_id: priceId },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data.url;
+  } catch (error: any) {
+    toast.error(
+      error.response?.data?.detail || "Failed to Initiate Stripe Checkout"
+    );
     return null;
   }
 };
