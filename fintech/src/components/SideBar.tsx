@@ -55,7 +55,7 @@ const handleClickOutside = (e: MouseEvent) => {
           open ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <h1 className="text-2xl font-bold mb-8">iNsoM22</h1> // Replace it with whatever u want moiz
+        <h1 className="text-2xl font-bold mb-8">iNsoM22</h1> {/* Replace it with whatever u want moiz */}
         <ul className="space-y-4">
           <li
             onClick={() => {
