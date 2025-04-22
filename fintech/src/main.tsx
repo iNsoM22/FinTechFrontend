@@ -13,7 +13,6 @@ import {
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
 
-
 const router = createBrowserRouter([
   {
     element: <App />,
