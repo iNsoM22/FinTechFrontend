@@ -3,7 +3,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 
 interface BalanceComponentProps {
-  user: string
+  user: string;
   data: {
     amount: Number;
     currency: string;
@@ -26,7 +26,7 @@ const Balance = ({ user, data }: BalanceComponentProps) => {
 
       const response = await getCurrentAccountBalance();
 
-      setBalance(response.balance); 
+      setBalance(response.balance);
       setTimestamp(new Date().toLocaleString());
       const lastUpdatedDate = new Date(response.last_updated);
       setLastModified(lastUpdatedDate.toLocaleString());
@@ -57,7 +57,9 @@ const Balance = ({ user, data }: BalanceComponentProps) => {
 
       <div className="w-full max-w-2xl flex flex-col gap-6 text-center">
         <div className="bg-[#323232] p-6 sm:p-8 rounded-2xl shadow-md">
-          <p className="text-gray-300 text-lg sm:text-xl">Subscription Period</p>
+          <p className="text-gray-300 text-lg sm:text-xl">
+            Subscription Period
+          </p>
           <h3 className="text-xl sm:text-2xl mt-2">
             {`from ${data.started_at} to ${data.ended_at}` || "Loading..."}
           </h3>
@@ -66,7 +68,9 @@ const Balance = ({ user, data }: BalanceComponentProps) => {
         {balance !== null && (
           <>
             <div className="bg-[#323232] p-6 sm:p-8 rounded-2xl shadow-md">
-              <p className="text-gray-300 text-lg sm:text-xl">Current Balance</p>
+              <p className="text-gray-300 text-lg sm:text-xl">
+                Current Balance
+              </p>
               <h3 className="text-3xl sm:text-5xl font-bold mt-2">
                 ${balance}
               </h3>
@@ -79,7 +83,9 @@ const Balance = ({ user, data }: BalanceComponentProps) => {
 
             {lastModified && (
               <div className="bg-[#323232] p-6 sm:p-8 rounded-2xl shadow-md">
-                <p className="text-gray-300 text-lg sm:text-xl">Last Balance Modified</p>
+                <p className="text-gray-300 text-lg sm:text-xl">
+                  Last Balance Modified
+                </p>
                 <h3 className="text-xl sm:text-2xl mt-2">{lastModified}</h3>
               </div>
             )}

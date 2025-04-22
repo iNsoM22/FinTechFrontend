@@ -20,7 +20,7 @@ const Dashboard = () => {
   const [subscription, setSubscription] = useState<SubscriptionData | null>(
     null
   );
-  const [username, setUsername] = useState("")
+  const [username, setUsername] = useState("");
 
   const navigate = useNavigate();
 
@@ -31,7 +31,7 @@ const Dashboard = () => {
         navigate("/pricing");
       } else {
         const sub = response.subscription;
-        
+
         const temp: SubscriptionData = {
           amount: sub.amount,
           currency: sub.current,
@@ -68,9 +68,11 @@ const Dashboard = () => {
 
       {/* Main Content Area */}
       <main className="flex-1 min-h-screen p-6 sm:p-10 overflow-hidden">
-        {selectedPage === "Balance" && <Balance data={subscription!} user={username} />}
+        {selectedPage === "Balance" && (
+          <Balance data={subscription!} user={username} />
+        )}
         {selectedPage === "Transfer Funds" && <Transfer />}
-        {selectedPage === "Transactions" && <Transactions />}
+        {selectedPage === "Transactions" && <Transactions user={username} />}
       </main>
     </div>
   );

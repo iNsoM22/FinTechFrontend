@@ -151,7 +151,7 @@ export const checkMySubscription = async (): Promise<any | null> => {
         "Content-Type": "application/json",
       },
     });
-    
+
     return response.data;
   } catch (error: any) {
     if (error.response.status === 404) {
@@ -182,7 +182,6 @@ export const getCurrentAccountBalance = async (): Promise<any | null> => {
       },
     });
     return response.data;
-
   } catch (error: any) {
     if (error.response.status === 404) {
       toast.error("Account Not Found");
@@ -196,12 +195,14 @@ export const getCurrentAccountBalance = async (): Promise<any | null> => {
 };
 
 export interface MoneyTransferData {
-  receiverAccountId: string,
-  receiverUsername: string,
-  transferAmount: Number
+  receiverAccountId: string;
+  receiverUsername: string;
+  transferAmount: Number;
 }
 
-export const requestMoneyTransfer = async (data: MoneyTransferData): Promise<any | null> => {
+export const requestMoneyTransfer = async (
+  data: MoneyTransferData
+): Promise<any | null> => {
   try {
     const token = localStorage.getItem("token");
 
@@ -231,6 +232,51 @@ export const requestMoneyTransfer = async (data: MoneyTransferData): Promise<any
       toast.error(error.response.data.detail);
     } else {
       toast.error("Transfer Failed. Please try again.");
+    }
+    return null;
+  }
+};
+
+export interface GetUserTransactionsParams {
+  page?: number;
+  date_from?: string;
+  date_till?: string;
+}
+
+export const getUserTransactions = async ({
+  page = 1,
+  date_from,
+  date_till,
+}: GetUserTransactionsParams): Promise<any | null> => {
+  try {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      toast.error("No Token Found. Please Log in Again.");
+      return null;
+    }
+
+    const offset = (page - 1) * 50;
+    const params = new URLSearchParams();
+
+    params.append("limit", "50");
+    params.append("offset", offset.toString());
+    if (date_from) params.append("date_from", date_from);
+    if (date_till) params.append("date_till", date_till);
+
+    const response = await axios.get(`${server}/accounts/transactions`, {
+      params,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data;
+  } catch (error: any) {
+    if (error.response?.data?.detail) {
+      toast.error(error.response.data.detail);
+    } else {
+      toast.error("Failed to fetch transactions. Please try again.");
     }
     return null;
   }
