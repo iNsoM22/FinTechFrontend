@@ -106,10 +106,16 @@ export const getStripeProducts = async (): Promise<StripeProduct[] | null> => {
 
 // Create Stripe Checkout Session
 export const createCheckoutSession = async (
-  priceId: string,
-  token: string
+  priceId: string
 ): Promise<string | null> => {
   try {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      toast.error("No Token Found. Please log in Again.");
+      return null;
+    }
+
     const response = await axios.post(
       `${server}/payment/create-checkout-session`,
       { price_id: priceId },
@@ -120,11 +126,10 @@ export const createCheckoutSession = async (
         },
       }
     );
-
     return response.data.url;
   } catch (error: any) {
     toast.error(
-      error.response?.data?.detail || "Failed to initiate Stripe Checkout"
+      error.response?.data?.detail || "Failed to Initiate Stripe Checkout"
     );
     return null;
   }
