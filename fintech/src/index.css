@@ -10,7 +10,7 @@
   --background-color: #f9fafb;
   --text-color: #111827;
   --dark: #323232;
-  --light: #FFFFFF;
+  --light: #ffffff;
 
   /* Font */
   --font-family: "Segoe UI", Tahoma, Verdana, sans-serif;
@@ -63,6 +63,9 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  background: #1a1a1a;
 }
 
 @theme inline {
@@ -148,6 +151,72 @@ body {
 
 .btn-hover:hover {
   transform: translateY(-3px);
-  background-color: #4A90E2;  
+  background-color: #4a90e2;
   transition: all 0.3s ease-in-out;
 }
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite linear;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse 10s infinite ease-in-out;
+}
+
+.neon-glow:hover {
+  box-shadow: 0 0 20px rgba(0, 200, 255, 0.4), 0 0 40px rgba(0, 200, 255, 0.2);
+}
+
+.drop-shadow-glow {
+  text-shadow: 0 0 8px rgba(0, 200, 255, 0.7);
+}
+
+.cursor-wow {
+  cursor: url("https://cdn-icons-png.flaticon.com/512/833/833472.png"), auto;
+}
+
+/* #confetti.active::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(circle, white 2px, transparent 2px);
+  background-size: 20px 20px;
+  animation: explode 1s ease-out forwards;
+} */
+
+/* @keyframes explode {
+  0% {
+    opacity: 1;
+    transform: scale(0.5);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(3);
+  }
+} */
