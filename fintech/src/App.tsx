@@ -1,14 +1,15 @@
 import { Toaster } from "react-hot-toast";
-import { Outlet } from "react-router"
-
+import { Outlet } from "react-router";
+import Navbar from "./components/NavBar";
 
 function App() {
-  return(
-  <>
-  <Outlet />;
-  <Toaster />
-  </>
-  )
+  return (
+    <>
+      <Navbar />
+      <Outlet />;
+      <Toaster />
+    </>
+  );
 }
 
 export default App;

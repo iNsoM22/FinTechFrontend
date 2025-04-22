@@ -3,7 +3,10 @@ import Sidebar from "@/components/SideBar";
 import Balance from "@/components/Balance";
 import Transfer from "@/components/Transfer";
 import Transactions from "@/components/Transactions";
-import { checkMySubscription } from "@/service/BackendService";
+import {
+  checkMySubscription,
+  validateTokenUser,
+} from "@/service/BackendService";
 import { useNavigate } from "react-router-dom";
 
 interface SubscriptionData {
@@ -21,32 +24,47 @@ const Dashboard = () => {
     null
   );
   const [username, setUsername] = useState("");
+  const [userRole, setUserRole] = useState<string>("");
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    const verifySubscription = async () => {
-      const response = await checkMySubscription();
-      if (!response) {
-        navigate("/pricing");
-      } else {
-        const sub = response.subscription;
+    const verifyUserAndSubscription = async () => {
+      const response = await validateTokenUser();
 
-        const temp: SubscriptionData = {
-          amount: sub.amount,
-          currency: sub.current,
-          started_at: sub.started_at.substring(0, 10),
-          ended_at: sub.ended_at.substring(0, 10),
-          status: sub.status,
-        };
-        setUsername(response.user);
-        setSubscription(temp);
-        setLoading(false);
+      if (!response || !response.role) {
+        navigate("/login");
+        return;
       }
+
+      setUserRole(response.role);
+      setUsername(response.username || "");
+
+      if (response.role === "Admin") {
+        setLoading(false);
+        return;
+      }
+
+      const subRes = await checkMySubscription();
+      if (!subRes) {
+        navigate("/pricing");
+        return;
+      }
+
+      const temp: SubscriptionData = {
+        amount: subRes.amount,
+        currency: subRes.currency,
+        started_at: subRes.started_at.substring(0, 10),
+        ended_at: subRes.ended_at.substring(0, 10),
+        status: subRes.status,
+      };
+
+      setSubscription(temp);
+      setLoading(false);
     };
 
-    verifySubscription();
-  }, []);
+    verifyUserAndSubscription();
+  }, [navigate]);
 
   if (loading) {
     return (
@@ -56,11 +74,17 @@ const Dashboard = () => {
     );
   }
 
+  if (userRole === "Admin") {
+    return <AdminDashBoard />;
+  }
+
   return (
     <div className="flex h-screen bg-[#1E1E1E] text-white">
       {/* Sidebar */}
       <div className="sticky top-0 self-start">
         <Sidebar
+          username={username}
+          mode="Developer"
           selectedPage={selectedPage}
           setSelectedPage={setSelectedPage}
         />
@@ -74,6 +98,14 @@ const Dashboard = () => {
         {selectedPage === "Transfer Funds" && <Transfer />}
         {selectedPage === "Transactions" && <Transactions user={username} />}
       </main>
+    </div>
+  );
+};
+
+const AdminDashBoard = () => {
+  return (
+    <div className="h-screen flex items-center justify-center text-white text-2xl">
+      Welcome Admin – Dashboard Content Goes Here
     </div>
   );
 };
