@@ -167,7 +167,7 @@ export default function PricingPlans() {
           <div className="relative z-10 mt-12 flex justify-center items-center">
             <button
               onClick={handleProceedToPayment}
-              className="bg-gradient-to-r from-green-400 to-emerald-600 hover:from-green-500 hover:to-emerald-700 text-white px-8 py-3 rounded-full text-lg font-semibold shadow-xl transition-all duration-300"
+              className="bg-gradient-to-r from-green-400 to-emerald-600 hover:from-green-500 hover:to-emerald-700 active:scale-95 text-white px-8 py-3 rounded-full text-lg font-semibold shadow-xl transition-all duration-300"
             >
               🚀 Proceed to Payment
             </button>

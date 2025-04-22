@@ -135,7 +135,6 @@ export const createCheckoutSession = async (
   }
 };
 
-
 // Check My Active Subscription
 export const checkMySubscription = async (): Promise<any | null> => {
   try {
@@ -152,11 +151,46 @@ export const checkMySubscription = async (): Promise<any | null> => {
         "Content-Type": "application/json",
       },
     });
+    
+    return response.data;
+  } catch (error: any) {
+    if (error.response.status === 404) {
+      toast.error("No Active Subscription Found");
+    } else {
+      toast.error(
+        error.response?.data?.detail || "Failed to Fetch Subscription Info"
+      );
+    }
+    return null;
+  }
+};
 
+// Get Current Account Balance
+export const getCurrentAccountBalance = async (): Promise<any | null> => {
+  try {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      toast.error("No Token Found. Please log in Again.");
+      return null;
+    }
+
+    const response = await axios.get(`${server}/accounts/balance/me`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
     return response.data;
 
   } catch (error: any) {
-    toast.error(error.response?.data?.detail || "Failed to Fetch Subscription Info");
+    if (error.response.status === 404) {
+      toast.error("Account Not Found");
+    } else {
+      toast.error(
+        error.response?.data?.detail || "Failed to Fetch Account Balance"
+      );
+    }
     return null;
   }
 };
