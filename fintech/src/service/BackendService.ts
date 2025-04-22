@@ -134,3 +134,29 @@ export const createCheckoutSession = async (
     return null;
   }
 };
+
+
+// Check My Active Subscription
+export const checkMySubscription = async (): Promise<any | null> => {
+  try {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      toast.error("No Token Found. Please log in Again.");
+      return null;
+    }
+
+    const response = await axios.get(`${server}/subscriptions/me`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    return response.data;
+
+  } catch (error: any) {
+    toast.error(error.response?.data?.detail || "Failed to Fetch Subscription Info");
+    return null;
+  }
+};

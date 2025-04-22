@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Toaster, toast } from "react-hot-toast";
+import { toast } from "react-hot-toast";
 import { DollarSign, Star } from "lucide-react";
 import Tilt from "react-parallax-tilt";
 import {
@@ -47,7 +47,7 @@ export default function PricingPlans() {
     const token = localStorage.getItem("token");
     if (!token) {
       toast.error("You must be Logged in to Proceed.");
-      setTimeout(() => navigate("/"), 2000);
+      setTimeout(() => navigate("/login"), 2000);
       return;
     }
 
@@ -70,7 +70,6 @@ export default function PricingPlans() {
 
   return (
     <>
-      <Toaster position="top-center" />
       <div className="relative min-h-screen bg-[#1a1a1a] text-white px-4 py-10 overflow-hidden">
         <div className="absolute w-[500px] h-[500px] bg-pink-500 rounded-full blur-3xl opacity-20 top-[-100px] left-[-150px] z-0 animate-pulse-slow" />
         <div className="absolute w-[400px] h-[400px] bg-cyan-500 rounded-full blur-2xl opacity-20 bottom-[-100px] right-[-150px] z-0 animate-pulse-slow" />
