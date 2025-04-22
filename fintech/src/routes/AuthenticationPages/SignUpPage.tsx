@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
 import {
+  UserLoginData,
   UserRegistrationData,
+  sendUserLoginData,
   sendUserRegistrationData,
 } from "@/service/BackendService";
 import { Link, useNavigate } from "react-router-dom";
@@ -56,17 +58,31 @@ export default function SignUpPage() {
 
       if (response) {
         toast.success("Account Created Successfully 🎉");
+
         setTimeout(() => {
-          toast.success("Now You can Sign in");
+          toast.success("Signing you in...");
         }, 2000);
-        setFormData({ username: "", email: "", password: "" });
-        setTimeout(() => {
-          navigate("/login");
-        }, 5000);
+
+        const payload: UserLoginData = {
+          username: formData.username,
+          password: formData.password,
+          mode: "Developer",
+        };
+
+        const response = await sendUserLoginData(payload);
+
+        if (response) {
+          localStorage.setItem("token", response.access_token);
+          toast.success("Logged In Succesfully");
+          setInterval(() => {
+            navigate("/");
+          }, 2000);
+          setFormData({ username: "", email: "", password: "" });
+        }
       }
     } else {
       toast.dismiss();
-      toast.error("Invalid Values entered in the Form");
+      toast.error("Invalid Values Entered in the Form");
     }
   };
 
