@@ -52,17 +52,15 @@ export default function SignUpPage() {
 
     if (validate()) {
       const response = await sendUserRegistrationData(formData);
-      toast.dismiss();
       toast.success("Account Created Successfully 🎉");
       setTimeout(() => {
         toast.success("Now You can Sign in");
       }, 2000);
       setFormData({ username: "", email: "", password: "" });
       setTimeout(() => {
-        navigate("/"); 
+        navigate("/");
       }, 5000);
     } else {
-      toast.dismiss();
       toast.error("Invalid Values entered in the Form");
     }
   };
@@ -70,8 +68,8 @@ export default function SignUpPage() {
   return (
     <>
       <Toaster position="top-center" />
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#1a1a1a] to-[#333] px-4 sm:px-6 lg:px-8">
-        <div className="backdrop-blur-md bg-white/5 border border-white/20 text-white rounded-2xl p-6 sm:p-8 w-full max-w-[95%] sm:max-w-[420px] md:max-w-[480px] shadow-2xl">
+      <div className="min-h-screen flex items-center justify-center bg-slate-900 px-4 sm:px-6 lg:px-8">
+        <div className="backdrop-blur-md bg-white/5 border border-white/10 text-white rounded-2xl p-6 sm:p-8 w-full max-w-[95%] sm:max-w-[420px] md:max-w-[480px] shadow-2xl">
           <h2 className="text-2xl sm:text-3xl font-bold mb-2 text-center text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">
             Developer Registration
           </h2>
@@ -95,7 +93,9 @@ export default function SignUpPage() {
                 placeholder="Your username"
                 value={formData.username}
                 onChange={handleChange}
-                className={`w-full px-3 py-2 rounded-md bg-slate-700 text-white placeholder-white/50 border ${errors.username ? "border-red-500" : "border-slate-600"} focus:outline-none focus:ring-2 focus:ring-white transition-all duration-300`}
+                className={`w-full px-3 py-2 rounded-md bg-slate-700 text-white placeholder-white/50 border ${
+                  errors.username ? "border-red-500" : "border-slate-600"
+                } focus:outline-none focus:ring-2 focus:ring-white`}
               />
               {errors.username && (
                 <p className="text-red-400 text-xs mt-1">{errors.username}</p>
@@ -113,7 +113,9 @@ export default function SignUpPage() {
                 placeholder="you@example.com"
                 value={formData.email}
                 onChange={handleChange}
-                className={`w-full px-3 py-2 rounded-md bg-slate-700 text-white placeholder-white/50 border ${errors.email ? "border-red-500" : "border-slate-600"} focus:outline-none focus:ring-2 focus:ring-white transition-all duration-300`}
+                className={`w-full px-3 py-2 rounded-md bg-slate-700 text-white placeholder-white/50 border ${
+                  errors.email ? "border-red-500" : "border-slate-600"
+                } focus:outline-none focus:ring-2 focus:ring-white`}
               />
               {errors.email && (
                 <p className="text-red-400 text-xs mt-1">{errors.email}</p>
@@ -134,7 +136,9 @@ export default function SignUpPage() {
                 placeholder="******"
                 value={formData.password}
                 onChange={handleChange}
-                className={`w-full px-3 py-2 rounded-md bg-slate-700 text-white placeholder-white/50 border ${errors.password ? "border-red-500" : "border-slate-600"} focus:outline-none focus:ring-2 focus:ring-white transition-all duration-300`}
+                className={`w-full px-3 py-2 rounded-md bg-slate-700 text-white placeholder-white/50 border ${
+                  errors.password ? "border-red-500" : "border-slate-600"
+                } focus:outline-none focus:ring-2 focus:ring-white`}
               />
               {errors.password && (
                 <p className="text-red-400 text-xs mt-1">{errors.password}</p>
@@ -143,15 +147,15 @@ export default function SignUpPage() {
 
             <button
               type="submit"
-              className="w-full bg-gradient-to-r from-blue-500 to-blue-700 text-white hover:from-blue-600 hover:to-blue-800 py-2 rounded-md font-semibold text-sm sm:text-base transition-all duration-300 relative overflow-hidden"
+              className="w-full bg-gradient-to-r from-white to-white/80 text-slate-900 hover:from-gray-100 hover:to-white py-2 rounded-md font-semibold text-sm sm:text-base transition-all duration-300 relative overflow-hidden"
             >
               Sign Up
             </button>
 
-            <p className="text-center text-sm mt-4">
+            <p className="text-center text-sm">
               Already a User?{" "}
               <Link
-                to="/"
+                to="/registration"
                 className="text-blue-400 hover:underline"
               >
                 Sign In
@@ -160,15 +164,6 @@ export default function SignUpPage() {
           </form>
         </div>
       </div>
-      <style>{`
-      html, body {
-      margin: 0;
-      padding: 0;
-      overflow-x: hidden;
-      overflow-y: hidden;
-      background: #1a1a1a;
-}`}
-      </style>
     </>
   );
 }
