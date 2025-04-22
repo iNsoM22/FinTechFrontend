@@ -194,3 +194,44 @@ export const getCurrentAccountBalance = async (): Promise<any | null> => {
     return null;
   }
 };
+
+export interface MoneyTransferData {
+  receiverAccountId: string,
+  receiverUsername: string,
+  transferAmount: Number
+}
+
+export const requestMoneyTransfer = async (data: MoneyTransferData): Promise<any | null> => {
+  try {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      toast.error("No Token Found. Please log in again.");
+      return null;
+    }
+
+    const response = await axios.post(
+      `${server}/accounts/transfer`,
+      {
+        receiver_account_id: data.receiverAccountId,
+        receiver_username: data.receiverUsername,
+        transfer_amount: data.transferAmount,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error: any) {
+    if (error.response?.data?.detail) {
+      toast.error(error.response.data.detail);
+    } else {
+      toast.error("Transfer Failed. Please try again.");
+    }
+    return null;
+  }
+};

@@ -1,104 +1,97 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { requestMoneyTransfer } from "@/service/BackendService";
 
 const Transfer = () => {
-  const [sourceId, setSourceId] = useState("");
   const [destinationId, setDestinationId] = useState("");
   const [amount, setAmount] = useState("");
-  const [balance, setBalance] = useState(null);
+  const [receiverUsername, setReceiverUsername] = useState("");
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({
-    sourceId: false,
-    destinationId: false,
-    amount: false,
+    receiverAccountId: false,
+    receiverUsername: false,
+    transferAmount: false
   });
-  
 
   const handleTransfer = async () => {
     const newErrors = {
-      sourceId: !sourceId.trim(),
-      destinationId: !destinationId.trim(),
-      amount: !amount.trim(),
+      receiverAccountId: !destinationId.trim(),
+      transferAmount: !amount.trim() || Number(amount) <= 0,
+      receiverUsername: !receiverUsername.trim(),
     };
-  
+
     setErrors(newErrors);
-  
+
     const hasError = Object.values(newErrors).some(Boolean);
     if (hasError) {
-      toast.error("Please fill in all fields.");
+      toast.error("Please Fill in all Fields Correctly.");
       return;
     }
-  
+
     try {
       setLoading(true);
-      toast.loading("Processing transfer...", { id: "transfer" });
-  
-      const res = await fetch("/api/transfer", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          sourceId,
-          destinationId,
-          amount,
-        }),
+      toast.loading("Processing Transfer...", { id: "transfer" });
+
+      const response = await requestMoneyTransfer({
+        receiverAccountId: destinationId,
+        receiverUsername,
+        transferAmount: Number(amount),
       });
-  
-      if (!res.ok) throw new Error("Transfer failed");
-  
-      const data = await res.json();
-      setBalance(data.updatedBalance);
-  
-      toast.success("Transfer successful!", { id: "transfer" });
+
+      if (response) {
+        toast.success("Transfer Successfull !", { id: "transfer" });
+
+        // Reset Form
+        setDestinationId("");
+        setAmount("");
+        setReceiverUsername("");
+      }
+
     } catch (err) {
-      toast.error("Transfer failed. Please try again.", { id: "transfer" });
+      toast.error("Transfer Failed. Please Try Later.", { id: "transfer" });
     } finally {
       setLoading(false);
     }
   };
-  
-  
 
   return (
     <div className="flex-1 bg-[#1E1E1E] p-6 sm:p-10 text-white flex flex-col items-center">
       <h2 className="text-4xl sm:text-5xl font-bold mb-6 text-center">Transfer Funds</h2>
 
-      {/*Transfer*/}
       <div className="w-full max-w-md flex flex-col gap-6 text-center">
         <div className="bg-[#323232] p-6 sm:p-8 rounded-2xl shadow-md">
 
-          {/*Source ID*/}
+          {/* Destination ID */}
           <div className="flex flex-col mb-4">
-            <label htmlFor="sourceId" className="text-sm text-gray-300 mb-2 text-left">Source ID</label>
-            <input
-                type="text"
-                id="sourceId"
-                value={sourceId}
-                onChange={(e) => setSourceId(e.target.value)}
-                placeholder="Enter Source ID"
-                className={`w-full p-3 text-black rounded-lg bg-white border ${
-                    errors.sourceId ? "border-red-500" : "border-transparent"
-                }`}
-                />
-          </div>
-
-          {/*Destination ID*/}
-          <div className="flex flex-col mb-4">
-            <label htmlFor="destinationId" className="text-sm text-gray-300 mb-2 text-left">Destination ID</label>
+            <label htmlFor="destinationId" className="text-sm text-gray-300 mb-2 text-left">Receiver ID</label>
             <input
               type="text"
               id="destinationId"
               value={destinationId}
               onChange={(e) => setDestinationId(e.target.value)}
-              placeholder="Enter Destination ID"
+              placeholder="Enter Receiver ID"
               className={`w-full p-3 text-black rounded-lg bg-white border ${
-                errors.destinationId ? "border-red-500" : "border-transparent"
-                }`}
+                errors.receiverAccountId ? "border-red-500" : "border-transparent"
+              }`}
             />
           </div>
 
-          {/*Amount*/}
+          {/* Receiver Username */}
+          <div className="flex flex-col mb-4">
+            <label htmlFor="receiverUsername" className="text-sm text-gray-300 mb-2 text-left">Receiver Username</label>
+            <input
+              type="text"
+              id="receiverUsername"
+              value={receiverUsername}
+              onChange={(e) => setReceiverUsername(e.target.value)}
+              placeholder="Enter Receiver Username"
+              className={`w-full p-3 text-black rounded-lg bg-white border ${
+                errors.receiverUsername ? "border-red-500" : "border-transparent"
+              }`}
+            />
+          </div>
+
+          {/* Amount */}
           <div className="flex flex-col mb-4">
             <label htmlFor="amount" className="text-sm text-gray-300 mb-2 text-left">Amount</label>
             <input
@@ -106,10 +99,10 @@ const Transfer = () => {
               id="amount"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              placeholder="e.g. 10000"
+              placeholder="$10.00"
               className={`w-full p-3 text-black rounded-lg bg-white border ${
-                errors.amount ? "border-red-500" : "border-transparent"
-                }`}              
+                errors.transferAmount ? "border-red-500" : "border-transparent"
+              }`}
             />
           </div>
 
@@ -123,13 +116,6 @@ const Transfer = () => {
             {loading ? "Processing..." : "Transfer"}
           </button>
         </div>
-
-        {balance !== null && (
-          <div className="bg-[#323232] p-6 sm:p-8 rounded-2xl shadow-md mt-6">
-            <p className="text-gray-300 text-lg sm:text-xl">Updated Balance</p>
-            <h3 className="text-3xl sm:text-5xl font-bold mt-2">${balance}</h3>
-          </div>
-        )}
       </div>
     </div>
   );
