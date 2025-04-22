@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { sendUserLoginData, UserLoginData } from "@/service/BackendService";
 import toast from "react-hot-toast";
 
@@ -15,6 +15,7 @@ export default function LoginPage() {
     password: "",
     remember: false,
   });
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -25,17 +26,24 @@ export default function LoginPage() {
     const payload: UserLoginData = {
       username: formData.identifier,
       password: formData.password,
-      mode: mode
+      mode: mode,
     };
 
     const response = await sendUserLoginData(payload);
 
-    if(response){
-      formData.remember && localStorage.setItem("token", response.access_token);
-      toast.success("Logged In Succesfully.")
-    }
-    else{
-      toast.error("Unable to Login.")
+    if (response) {
+      localStorage.setItem("token", response.access_token);
+      toast.success("Logged In Succesfully");
+      setInterval(() => {
+        navigate("/");
+      }, 2000);
+      setFormData((prev) => ({
+        identifier: "",
+        password: "",
+        remember: prev.remember,
+      }));
+    } else {
+      toast.error("Unable to Login");
     }
   };
 
@@ -125,7 +133,7 @@ export default function LoginPage() {
                   Remember Me
                 </label>
                 <a href="#" className="text-blue-400 hover:underline">
-                  Forgot password?
+                  Forgot Password?
                 </a>
               </div>
 
@@ -137,8 +145,11 @@ export default function LoginPage() {
               </Button>
 
               <p className="text-center text-sm">
-                Don't have an Account? {" "}
-                <Link to="/registration" className="text-blue-400 hover:underline">
+                Don't have an Account?{" "}
+                <Link
+                  to="/registration"
+                  className="text-blue-400 hover:underline"
+                >
                   Sign Up
                 </Link>
               </p>

@@ -53,14 +53,17 @@ export default function SignUpPage() {
     if (validate()) {
       const response = await sendUserRegistrationData(formData);
       toast.dismiss();
-      toast.success("Account Created Successfully 🎉");
-      setTimeout(() => {
-        toast.success("Now You can Sign in");
-      }, 2000);
-      setFormData({ username: "", email: "", password: "" });
-      setTimeout(() => {
-        navigate("/"); 
-      }, 5000);
+
+      if (response) {
+        toast.success("Account Created Successfully 🎉");
+        setTimeout(() => {
+          toast.success("Now You can Sign in");
+        }, 2000);
+        setFormData({ username: "", email: "", password: "" });
+        setTimeout(() => {
+          navigate("/login");
+        }, 5000);
+      }
     } else {
       toast.dismiss();
       toast.error("Invalid Values entered in the Form");
@@ -95,7 +98,9 @@ export default function SignUpPage() {
                 placeholder="Your username"
                 value={formData.username}
                 onChange={handleChange}
-                className={`w-full px-3 py-2 rounded-md bg-slate-700 text-white placeholder-white/50 border ${errors.username ? "border-red-500" : "border-slate-600"} focus:outline-none focus:ring-2 focus:ring-white transition-all duration-300`}
+                className={`w-full px-3 py-2 rounded-md bg-slate-700 text-white placeholder-white/50 border ${
+                  errors.username ? "border-red-500" : "border-slate-600"
+                } focus:outline-none focus:ring-2 focus:ring-white transition-all duration-300`}
               />
               {errors.username && (
                 <p className="text-red-400 text-xs mt-1">{errors.username}</p>
@@ -113,7 +118,9 @@ export default function SignUpPage() {
                 placeholder="you@example.com"
                 value={formData.email}
                 onChange={handleChange}
-                className={`w-full px-3 py-2 rounded-md bg-slate-700 text-white placeholder-white/50 border ${errors.email ? "border-red-500" : "border-slate-600"} focus:outline-none focus:ring-2 focus:ring-white transition-all duration-300`}
+                className={`w-full px-3 py-2 rounded-md bg-slate-700 text-white placeholder-white/50 border ${
+                  errors.email ? "border-red-500" : "border-slate-600"
+                } focus:outline-none focus:ring-2 focus:ring-white transition-all duration-300`}
               />
               {errors.email && (
                 <p className="text-red-400 text-xs mt-1">{errors.email}</p>
@@ -134,7 +141,9 @@ export default function SignUpPage() {
                 placeholder="******"
                 value={formData.password}
                 onChange={handleChange}
-                className={`w-full px-3 py-2 rounded-md bg-slate-700 text-white placeholder-white/50 border ${errors.password ? "border-red-500" : "border-slate-600"} focus:outline-none focus:ring-2 focus:ring-white transition-all duration-300`}
+                className={`w-full px-3 py-2 rounded-md bg-slate-700 text-white placeholder-white/50 border ${
+                  errors.password ? "border-red-500" : "border-slate-600"
+                } focus:outline-none focus:ring-2 focus:ring-white transition-all duration-300`}
               />
               {errors.password && (
                 <p className="text-red-400 text-xs mt-1">{errors.password}</p>
@@ -150,10 +159,7 @@ export default function SignUpPage() {
 
             <p className="text-center text-sm mt-4">
               Already a User?{" "}
-              <Link
-                to="/"
-                className="text-blue-400 hover:underline"
-              >
+              <Link to="/login" className="text-blue-400 hover:underline">
                 Sign In
               </Link>
             </p>
