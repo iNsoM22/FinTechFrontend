@@ -281,3 +281,82 @@ export const getUserTransactions = async ({
     return null;
   }
 };
+
+export interface FilterSubscriptionsParams {
+  status?: string;
+  start_date?: string;
+  end_date?: string;
+}
+
+export const getAllSubscriptions = async ({
+  status,
+  start_date,
+  end_date,
+}: FilterSubscriptionsParams): Promise<any[] | null> => {
+  try {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      toast.error("No Token Found. Please Log in Again.");
+      return null;
+    }
+
+    const params = new URLSearchParams();
+
+    if (status) params.append("status", status);
+    if (start_date) params.append("start_date", start_date);
+    if (end_date) params.append("end_date", end_date);
+
+    const response = await axios.get(`${server}/subscriptions/filter`, {
+      params,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data;
+  } catch (error: any) {
+    if (error.response?.data?.detail) {
+      toast.error(error.response.data.detail);
+    } else {
+      toast.error("Failed to Fetch Subscriptions. Please Try Later.");
+    }
+    return null;
+  }
+};
+
+export interface GetAllUsersParams {
+  page?: number;
+}
+
+export const getAllUsers = async ({
+  page = 1,
+}: GetAllUsersParams): Promise<any[] | null> => {
+  try {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      toast.error("No Token Found. Please Log in Again.");
+      return null;
+    }
+
+    const limit = 50;
+    const offset = (page - 1) * limit;
+
+    const response = await axios.get(`${server}/user/all`, {
+      params: { limit, offset },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data;
+  } catch (error: any) {
+    if (error.response?.data?.detail) {
+      toast.error(error.response.data.detail);
+    } else {
+      toast.error("Failed to Fetch Users. Please Try Later.");
+    }
+    return null;
+  }
+};
