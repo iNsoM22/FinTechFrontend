@@ -138,10 +138,9 @@ const Transactions = ({ user }: TransactionProps) => {
           currentY + cellHeight / 2
         );
       });
-      currentY += cellHeight; // Move down for the next row
+      currentY += cellHeight;
     });
 
-    // Draw table borders (optional)
     const tableWidth = 180; // Adjust table width
     doc.setLineWidth(0.5);
     doc.rect(20, startY, tableWidth, currentY - startY);
@@ -167,13 +166,12 @@ const Transactions = ({ user }: TransactionProps) => {
     }
 
     setPage(1);
-    await fetchTransactions(1); // Wait for transactions to be fetched
+    await fetchTransactions(1);
 
-    // Generate the PDF after fetching transactions
     if (transactions.length > 0) {
       generatePDF(transactions);
     } else {
-      toast.error("No transactions to generate invoice.");
+      toast.error("No Transactions to generate invoice.");
     }
   };
 
