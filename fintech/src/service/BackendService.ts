@@ -197,7 +197,7 @@ export const getCurrentAccountBalance = async (): Promise<any | null> => {
 export interface MoneyTransferData {
   receiverAccountId: string;
   receiverUsername: string;
-  transferAmount: Number;
+  transferAmount: number;
 }
 
 export const requestMoneyTransfer = async (
@@ -286,12 +286,14 @@ export interface FilterSubscriptionsParams {
   status?: string;
   start_date?: string;
   end_date?: string;
+  page?: number;
 }
 
 export const getAllSubscriptions = async ({
   status,
   start_date,
   end_date,
+  page = 1,
 }: FilterSubscriptionsParams): Promise<any[] | null> => {
   try {
     const token = localStorage.getItem("token");
@@ -302,7 +304,10 @@ export const getAllSubscriptions = async ({
     }
 
     const params = new URLSearchParams();
+    const offset = (page - 1) * 50;
 
+    params.append("limit", "50");
+    params.append("offset", offset.toString());
     if (status) params.append("status", status);
     if (start_date) params.append("start_date", start_date);
     if (end_date) params.append("end_date", end_date);
@@ -378,7 +383,7 @@ export const updateSubscription = async (
     }
 
     const response = await axios.put(
-      `${server}/subscription/${subscription_id}`,
+      `${server}/subscriptions/${subscription_id}`,
       data,
       {
         headers: {
