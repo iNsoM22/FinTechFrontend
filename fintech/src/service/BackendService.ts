@@ -360,3 +360,40 @@ export const getAllUsers = async ({
     return null;
   }
 };
+
+export interface UpdateSubscriptionPayload {
+  status?: string;
+}
+
+export const updateSubscription = async (
+  subscription_id: string,
+  data: UpdateSubscriptionPayload
+): Promise<any | null> => {
+  try {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      toast.error("No Token Found. Please Log in Again.");
+      return null;
+    }
+
+    const response = await axios.put(
+      `${server}/subscription/${subscription_id}`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error: any) {
+    if (error.response?.data?.detail) {
+      toast.error(error.response.data.detail);
+    } else {
+      toast.error("Failed to Update Subscription. Please Try Later.");
+    }
+    return null;
+  }
+};
